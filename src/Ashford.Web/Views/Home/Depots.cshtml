@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Depots";
+    var regions = ViewBag.Regions as List<string> ?? new List<string>();
+}
+<section class="wrap section">
+    <h1>Find your nearest depot</h1>
+    <p class="muted">Every depot holds a full range of tools and small plant, with larger machines delivered from our regional hubs.</p>
+
+    <div class="tabs" data-depot-tabs>
+        <button class="tab active" type="button" data-region="">All regions</button>
+        @foreach (var r in regions)
+        {
+            <button class="tab" type="button" data-region="@r">@r</button>
+        }
+    </div>
+
+    <div class="grid grid-3" data-depot-list>
+        <div class="card muted">Loading depots&hellip;</div>
+    </div>
+</section>

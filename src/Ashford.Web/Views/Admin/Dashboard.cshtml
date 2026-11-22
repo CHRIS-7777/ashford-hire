@@ -1,0 +1,59 @@
+@model AdminVm
+@{
+    ViewData["Title"] = "Head office dashboard";
+}
+<partial name="_StaffNav" />
+<section class="wrap section">
+    <div class="section-head">
+        <div>
+            <h1>Head office dashboard</h1>
+            <p class="muted">Trading across all depots. Figures update every time the page loads.</p>
+        </div>
+        <div class="ops-code">
+            <span class="muted small">Ops verification code</span>
+            <code>@Model.OpsCode</code>
+        </div>
+    </div>
+
+    <div class="grid grid-4 kpis">
+        <div class="card kpi"><div class="muted">Revenue, last 30 days</div><div class="kpi-value">&pound;@Model.Revenue30.ToString("N0")</div></div>
+        <div class="card kpi"><div class="muted">Machines on hire</div><div class="kpi-value">@Model.ActiveHires</div></div>
+        <div class="card kpi"><div class="muted">Bookings, last 7 days</div><div class="kpi-value">@Model.Bookings7</div></div>
+        <div class="card kpi"><div class="muted">Active customers</div><div class="kpi-value">@Model.Customers</div></div>
+    </div>
+
+    <div class="grid grid-2-1">
+        <div class="card">
+            <h3>Booking value by day (14 days)</h3>
+            <canvas id="revenueChart" height="140" data-chart="bar" data-series="@J.Serialize(Model.RevenueSeries)"></canvas>
+        </div>
+        <div class="card">
+            <h3>Hires by category</h3>
+            <canvas id="categoryChart" height="200" data-chart="doughnut" data-series="@J.Serialize(Model.CategorySeries)"></canvas>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Latest bookings</h3>
+        <table class="table">
+            <thead><tr><th>Ref</th><th>Customer</th><th>Equipment</th><th>Start</th><th>Status</th><th class="num">Total</th></tr></thead>
+            <tbody>
+            @foreach (var h in Model.Recent)
+            {
+                <tr>
+                    <td>@h.Ref</td>
+                    <td>@h.FullName <span class="muted small">@h.Company</span></td>
+                    <td>@h.EquipmentName</td>
+                    <td>@h.StartDate.ToString("dd MMM")</td>
+                    <td><span class="status status-@h.Status.Replace(" ", "-").ToLowerInvariant()">@h.Status</span></td>
+                    <td class="num">&pound;@h.Total.ToString("0.00")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</section>
+@section scripts {
+    <script src="/lib/chartjs/chart-4.4.1.umd.min.js"></script>
+    <script src="/js/dashboard.js?v=3.2.0"></script>
+}

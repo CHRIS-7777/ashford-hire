@@ -1,0 +1,9 @@
+**/bin
+**/obj
+tests
+tools
+README.md
+Solutions.md
+reset.sh
+.env
+.git

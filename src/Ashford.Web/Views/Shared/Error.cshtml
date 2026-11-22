@@ -1,0 +1,9 @@
+@{
+    ViewData["Title"] = "Error";
+}
+<section class="wrap narrow center-block">
+    <div class="error-code">@ViewBag.Code</div>
+    <h1>@(ViewBag.Code == 404 ? "Page not found" : ViewBag.Code == 403 ? "Access denied" : "Something went wrong")</h1>
+    <p class="muted">@ViewBag.Message</p>
+    <p><a class="btn btn-primary" href="/">Back to the homepage</a> <a class="btn btn-ghost" href="/equipment">Browse equipment</a></p>
+</section>

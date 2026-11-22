@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "Open an account";
+    var errors = ViewBag.Errors as List<string>;
+    dynamic f = ViewBag.Form;
+    var questions = ViewBag.Questions as string[];
+}
+<section class="wrap auth-wrap">
+    <div class="card auth-card wide">
+        <h1>Open an account</h1>
+        <p class="muted">Retail accounts are opened instantly. Apply for trade pricing from your account once you've placed your first hire.</p>
+        @if (errors != null)
+        {
+            <div class="alert alert-error"><ul>@foreach (var e in errors) { <li>@e</li> }</ul></div>
+        }
+        <form method="post" asp-antiforgery="true" action="/register" class="form-stack">
+            <div class="form-row">
+                <div class="field">
+                    <label for="fullName">Full name</label>
+                    <input id="fullName" name="fullName" value="@(f?.fullName)" required>
+                </div>
+                <div class="field">
+                    <label for="company">Company (optional)</label>
+                    <input id="company" name="company" value="@(f?.company)">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="field">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" value="@(f?.username)" required>
+                </div>
+                <div class="field">
+                    <label for="phone">Phone</label>
+                    <input id="phone" name="phone" value="@(f?.phone)">
+                </div>
+            </div>
+            <div class="field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" value="@(f?.email)" required>
+            </div>
+            <div class="form-row">
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" required>
+                </div>
+                <div class="field">
+                    <label for="confirm">Confirm password</label>
+                    <input id="confirm" name="confirm" type="password" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="field">
+                    <label for="securityQuestion">Security question</label>
+                    <select id="securityQuestion" name="securityQuestion">
+                        @foreach (var q in questions)
+                        {
+                            <option>@q</option>
+                        }
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="securityAnswer">Answer</label>
+                    <input id="securityAnswer" name="securityAnswer" required>
+                </div>
+            </div>
+            <p class="muted small">We use your security question to verify you if you forget your password.</p>
+            <button class="btn btn-primary btn-block" type="submit">Create account</button>
+        </form>
+    </div>
+</section>

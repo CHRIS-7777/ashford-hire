@@ -1,0 +1,66 @@
+@model RecoverVm
+@{
+    ViewData["Title"] = "Reset your password";
+}
+<section class="wrap auth-wrap">
+    <div class="card auth-card">
+        <h1>Reset your password</h1>
+        <ol class="steps">
+            <li class="@(Model.Step >= 1 ? "on" : "")">Account</li>
+            <li class="@(Model.Step >= 2 ? "on" : "")">Verify</li>
+            <li class="@(Model.Step >= 3 ? "on" : "")">New password</li>
+        </ol>
+
+        @if (Model.Error != null)
+        {
+            <div class="alert alert-error">@Model.Error</div>
+        }
+
+        @if (Model.Done)
+        {
+            <div class="alert alert-success">Your password has been changed. You can now sign in with your new password.</div>
+            <a class="btn btn-primary btn-block" href="/signin">Sign in</a>
+        }
+        else if (Model.Step == 1)
+        {
+            <form method="post" asp-antiforgery="true" action="/account/recover" class="form-stack">
+                <input type="hidden" name="step" value="1">
+                <div class="field">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" value="@Model.Username" required>
+                </div>
+                <button class="btn btn-primary btn-block" type="submit">Continue</button>
+            </form>
+        }
+        else if (Model.Step == 2)
+        {
+            <form method="post" asp-antiforgery="true" action="/account/recover" class="form-stack">
+                <input type="hidden" name="step" value="2">
+                <input type="hidden" name="username" value="@Model.Username">
+                <p>Answer the security question for <strong>@Model.Username</strong>.</p>
+                <div class="field">
+                    <label for="answer">@Model.Question</label>
+                    <input id="answer" name="answer" required autocomplete="off">
+                </div>
+                <button class="btn btn-primary btn-block" type="submit">Verify</button>
+            </form>
+        }
+        else
+        {
+            <form method="post" asp-antiforgery="true" action="/account/recover" class="form-stack">
+                <input type="hidden" name="step" value="3">
+                <input type="hidden" name="username" value="@Model.Username">
+                <p>Choose a new password for <strong>@Model.Username</strong>.</p>
+                <div class="field">
+                    <label for="newPassword">New password</label>
+                    <input id="newPassword" name="newPassword" type="password" required>
+                </div>
+                <div class="field">
+                    <label for="confirmPassword">Confirm new password</label>
+                    <input id="confirmPassword" name="confirmPassword" type="password" required>
+                </div>
+                <button class="btn btn-primary btn-block" type="submit">Set password</button>
+            </form>
+        }
+    </div>
+</section>

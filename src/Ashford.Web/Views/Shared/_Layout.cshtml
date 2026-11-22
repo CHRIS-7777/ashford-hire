@@ -1,0 +1,99 @@
+@{
+    var me = ViewData["Me"] as User;
+    var est = Context.AppSession()?.Estimate.Count ?? 0;
+    var path = Context.Request.Path.Value ?? "/";
+    string Active(string prefix) => path.StartsWith(prefix) ? "active" : "";
+}
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@(ViewData["Title"] != null ? ViewData["Title"] + " | Ashford Tool & Plant Hire" : "Ashford Tool & Plant Hire")</title>
+    <meta name="description" content="Plant, tool and access equipment hire across Yorkshire and Greater Manchester. Next-day delivery from 8 depots.">
+    <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/css/site.css?v=3.2.0">
+</head>
+<body>
+<div class="strip">
+    <div class="wrap strip-inner">
+        <span>Next-day delivery across Yorkshire &amp; Greater Manchester</span>
+        <span class="strip-right">Breakdowns 24/7: <strong>0113 496 0770</strong></span>
+    </div>
+</div>
+<header class="topbar">
+    <div class="wrap nav">
+        <a class="brand" href="/">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#f5a524"/><path d="M8 23 L16 8 L24 23 Z" fill="#14202b"/><rect x="13" y="17" width="6" height="6" fill="#f5a524"/></svg>
+            <span>Ashford<b>Hire</b></span>
+        </a>
+        <button class="nav-toggle" type="button" aria-label="Menu" data-nav-toggle>&#9776;</button>
+        <nav class="links" data-nav>
+            <a class="@Active("/equipment")" href="/equipment">Equipment</a>
+            <a class="@Active("/depots")" href="/depots">Depots</a>
+            <a class="@Active("/availability")" href="/availability">Delivery check</a>
+            <a class="@Active("/mobile")" href="/mobile">Site app</a>
+            <a class="@Active("/about")" href="/about">About</a>
+        </nav>
+        <div class="nav-right" data-nav>
+            <a class="estimate-link @Active("/estimate")" href="/estimate">Estimate <span class="count">@est</span></a>
+            @if (me == null)
+            {
+                <a class="btn btn-ghost" href="/signin">Sign in</a>
+                <a class="btn btn-primary" href="/register">Open an account</a>
+            }
+            else
+            {
+                @if (me.IsStaff)
+                {
+                    <a class="btn btn-ghost" href="/yard">Yard</a>
+                }
+                @if (me.IsAdmin)
+                {
+                    <a class="btn btn-ghost" href="/admin">Admin</a>
+                }
+                <a class="btn btn-ghost" href="/my">@me.FirstName</a>
+                <a class="btn btn-primary" href="/signout">Sign out</a>
+            }
+        </div>
+    </div>
+</header>
+
+<main class="page">
+    @RenderBody()
+</main>
+
+<footer class="footer">
+    <div class="wrap footer-grid">
+        <div>
+            <div class="brand brand-footer"><span>Ashford<b>Hire</b></span></div>
+            <p class="muted">Ashford Tool &amp; Plant Hire Ltd. Registered in England No. 08843217. Unit 4, Stourton Link, Leeds LS10 1RW.</p>
+        </div>
+        <div>
+            <h4>Hire</h4>
+            <a href="/equipment">Equipment</a>
+            <a href="/availability">Delivery check</a>
+            <a href="/estimate">Build an estimate</a>
+        </div>
+        <div>
+            <h4>Customers</h4>
+            <a href="/my">My account</a>
+            <a href="/mobile">Ashford Site app</a>
+            <a href="/account/recover">Forgotten password</a>
+        </div>
+        <div>
+            <h4>Company</h4>
+            <a href="/about">About us</a>
+            <a href="/depots">Depots</a>
+            <a href="/healthz">System status</a>
+        </div>
+    </div>
+    <div class="wrap footer-base muted">&copy; @DateTime.UtcNow.Year Ashford Tool &amp; Plant Hire Ltd &middot; Hire terms v3 &middot; Customer portal 3.2.0</div>
+</footer>
+
+<script src="/lib/jquery/jquery-3.4.1.min.js"></script>
+<script src="/lib/moment/moment-2.29.1.min.js"></script>
+<script src="/js/app.min.js?v=3.2.0"></script>
+@RenderSection("scripts", required: false)
+</body>
+</html>

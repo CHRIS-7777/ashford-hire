@@ -1,0 +1,89 @@
+@model QuotesVm
+@{
+    ViewData["Title"] = "Saved quotes";
+}
+<section class="wrap section account">
+    <partial name="_AccountNav" />
+    <div class="account-main">
+        <h1>Saved quotes</h1>
+        @if (ViewBag.Saved == true)
+        {
+            <div class="alert alert-success">Quote saved. Export it to share with your buyer or import it on another account.</div>
+        }
+
+        <div class="card">
+            @if (Model.Quotes.Count == 0)
+            {
+                <p class="muted">No saved quotes. Use <em>Save as quote</em> on any equipment page.</p>
+            }
+            else
+            {
+                <table class="table">
+                    <thead><tr><th>Ref</th><th>Equipment</th><th>Start</th><th>Days</th><th class="num">Total</th><th></th></tr></thead>
+                    <tbody>
+                    @foreach (var q in Model.Quotes)
+                    {
+                        <tr>
+                            <td>@q.Ref</td>
+                            <td>@q.EquipmentName</td>
+                            <td>@q.StartDate.ToString("dd MMM yyyy")</td>
+                            <td>@q.Days</td>
+                            <td class="num">&pound;@q.Total.ToString("0.00")</td>
+                            <td class="num"><a class="btn btn-small btn-ghost" href="/my/quotes/@q.Id/export">Export</a></td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+        </div>
+
+        <div class="card">
+            <h3>Import a quote</h3>
+            <p class="muted small">Open a quote file (.ashq) exported from the portal or the Ashford Site app to review it before booking.</p>
+            @if (Model.ImportError != null)
+            {
+                <div class="alert alert-error">@Model.ImportError</div>
+            }
+            <form method="post" asp-antiforgery="true" action="/my/quotes/import" enctype="multipart/form-data" class="form-stack">
+                <div class="field">
+                    <label for="file">Quote file</label>
+                    <input id="file" name="file" type="file" accept=".ashq,.txt,.json">
+                </div>
+                <div class="field">
+                    <label for="payload">&hellip;or paste the file contents</label>
+                    <textarea id="payload" name="payload" rows="4" class="mono">@Model.Payload</textarea>
+                </div>
+                <button class="btn btn-primary" type="submit">Open quote</button>
+            </form>
+        </div>
+
+        @if (Model.Imported != null)
+        {
+            var d = Model.Imported;
+            <div class="card">
+                <div class="section-head">
+                    <h3>Quote @d.Reference</h3>
+                    <span class="muted small">Format v@(d.FormatVersion) &middot; created @d.Created.ToString("dd MMM yyyy")</span>
+                </div>
+                <p>Prepared for <strong>@d.PreparedFor</strong> &middot; hire starting @d.HireStart.ToString("dd MMM yyyy")</p>
+                <table class="table">
+                    <thead><tr><th>Fleet ref</th><th>Description</th><th>Days</th><th class="num">Day rate</th><th class="num">Line total</th></tr></thead>
+                    <tbody>
+                    @foreach (var l in d.Lines ?? new List<QuoteLine>())
+                    {
+                        <tr><td>@l.Sku</td><td>@l.Description</td><td>@l.Days</td><td class="num">&pound;@l.DayRate.ToString("0.00")</td><td class="num">&pound;@l.LineTotal.ToString("0.00")</td></tr>
+                    }
+                    </tbody>
+                    <tfoot><tr><th colspan="4">Total</th><th class="num">&pound;@d.Total.ToString("0.00")</th></tr></tfoot>
+                </table>
+                @if (d.Terms != null)
+                {
+                    <details open>
+                        <summary>@d.Terms.Title</summary>
+                        <pre class="terms">@d.Terms.Content</pre>
+                    </details>
+                }
+            </div>
+        }
+    </div>
+</section>

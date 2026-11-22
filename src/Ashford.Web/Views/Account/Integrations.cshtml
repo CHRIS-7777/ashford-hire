@@ -1,0 +1,57 @@
+@model WebhookVm
+@{
+    ViewData["Title"] = "Integrations";
+}
+<section class="wrap section account">
+    <partial name="_AccountNav" />
+    <div class="account-main">
+        <h1>Integrations</h1>
+        <p class="muted">Send hire events (booked, delivered, off-hired, collected) to your own systems. We POST a JSON payload to your endpoint for each event.</p>
+
+        @if (Model.Saved)
+        {
+            <div class="alert alert-success">Webhook endpoint saved.</div>
+        }
+        @if (Model.Error != null)
+        {
+            <div class="alert alert-error">@Model.Error</div>
+        }
+
+        <div class="card">
+            <h3>Webhook endpoint</h3>
+            <form method="post" asp-antiforgery="true" action="/my/integrations" class="form-stack">
+                <div class="field">
+                    <label for="url">Endpoint URL</label>
+                    <input id="url" name="url" value="@Model.TestUrl" placeholder="https://hooks.yourcompany.co.uk/ashford">
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" type="submit">Save endpoint</button>
+                    <button class="btn btn-ghost" type="submit" formaction="/my/integrations/test">Send test event</button>
+                </div>
+            </form>
+            @if (!string.IsNullOrEmpty(Model.SavedUrl))
+            {
+                <p class="muted small">Currently sending to <code>@Model.SavedUrl</code></p>
+            }
+        </div>
+
+        @if (Model.Status.HasValue)
+        {
+            <div class="card">
+                <h3>Test delivery result</h3>
+                <dl class="dl">
+                    <dt>Endpoint</dt><dd><code>@Model.TestUrl</code></dd>
+                    <dt>Response</dt><dd>HTTP @Model.Status @Model.StatusText (@Model.ElapsedMs ms)</dd>
+                    <dt>Content type</dt><dd>@(Model.ContentType ?? "-")</dd>
+                </dl>
+                <h4>Response body</h4>
+                <pre class="terms">@Model.Body</pre>
+            </div>
+        }
+
+        <div class="card muted small">
+            <strong>Payload example</strong>
+            <pre class="mono">{ "event": "hire.delivered", "account": "your-username", "hireRef": "AH-41822", "sentAt": "2024-10-01T08:14:00Z" }</pre>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,68 @@
+# Ashford Hire - deliberately vulnerable training lab. Do not expose to untrusted networks.
+# Set LAB_BIND=127.0.0.1 in .env to keep the portal local-only.
+name: ashford-hire
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ashford-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${SA_PASSWORD}
+      MSSQL_MEMORY_LIMIT_MB: "1536"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q 'SELECT 1' -b -o /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+    networks: [backend]
+    restart: unless-stopped
+
+  db-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ashford-db-init
+    entrypoint: ["/bin/bash", "/init/init-db.sh"]
+    environment:
+      SA_PASSWORD: ${SA_PASSWORD}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD}
+      RO_DB_PASSWORD: ${RO_DB_PASSWORD}
+    volumes:
+      - ./db:/init:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [backend]
+    restart: "no"
+
+  web:
+    build: .
+    image: ashford-hire-portal:3.2.0
+    container_name: ashford-web
+    hostname: ash-web-02
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      Logging__LogLevel__Default: Warning
+      Logging__LogLevel__Microsoft.AspNetCore: Warning
+      ConnectionStrings__App: Server=db,1433;Database=AshfordHire;User Id=ashford_app;Password=${APP_DB_PASSWORD};Encrypt=False;TrustServerCertificate=True
+      ConnectionStrings__ReadOnly: Server=db,1433;Database=AshfordHire;User Id=ashford_ro;Password=${RO_DB_PASSWORD};Encrypt=False;TrustServerCertificate=True
+      Jwt__SigningKey: ${JWT_SIGNING_KEY}
+      Telematics__ApiKey: ${TELEMATICS_API_KEY}
+      Ops__InternalFlag: ${INTERNAL_FLAG}
+      Ops__AdminVerification: ${ADMIN_FLAG}
+      HEALTH_DIAGNOSTICS_TOKEN: ${HEALTH_FLAG}
+      PAYMENTS_GATEWAY_SECRET: ${PAYMENTS_SECRET}
+    ports:
+      - "${LAB_BIND:-0.0.0.0}:${LAB_PORT:-8100}:8080"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    networks: [frontend, backend]
+    restart: unless-stopped
+
+networks:
+  frontend: {}
+  backend:
+    internal: true

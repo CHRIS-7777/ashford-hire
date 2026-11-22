@@ -1,0 +1,17 @@
+2024-10-28 07:02:11Z [AUTH] OK user=k.osei role=dispatcher ip=10.20.4.31
+2024-10-28 07:14:52Z [AUTH] FAIL user=megan.p password=Liverpool1 ip=81.2.69.160
+2024-10-28 07:15:08Z [AUTH] OK user=megan.p role=customer ip=81.2.69.160
+2024-10-28 07:22:40Z [BOOKING] user=megan.p ref=AH-40213 sku=ACC-SC8 days=5 subtotal=420.00 discount=15% total=357.00 card=5454545454545454 exp=09/27 cvc=311
+2024-10-28 08:03:19Z [AUTH] FAIL user=admin password=trustno1! ip=10.20.4.17
+2024-10-28 08:03:31Z [AUTH] FAIL user=admin password=Trustno1 ip=10.20.4.17
+2024-10-28 08:03:44Z [AUTH] OK user=admin role=admin ip=10.20.4.17
+2024-10-28 08:41:05Z [WEBHOOK] TEST user=tariq url=https://hooks.northerngroundworks.co.uk/ashford status=200
+2024-10-28 09:12:57Z [RECOVERY] VERIFY user=lucy.b answer=pepper ip=86.17.40.2
+2024-10-28 09:13:30Z [RECOVERY] RESET user=lucy.b newpassword=sunshine1 ip=86.17.40.2
+2024-10-28 10:26:14Z [BOOKING] user=dev.patel ref=AH-40302 sku=PWR-G20 days=14 subtotal=570.00 discount=15% total=484.50 card=4000056655661881 exp=03/26 cvc=902
+2024-10-28 11:47:02Z [API] TOKEN user=tariq ip=82.132.218.4
+2024-10-28 12:30:55Z [AUTH] FAIL user=dispatch.qa password=Yard!2023 ip=10.20.4.40
+2024-10-28 12:31:10Z [AUTH] OK user=dispatch.qa role=dispatcher ip=10.20.4.40
+2024-10-28 14:05:29Z [ACCOUNT] RECOVERY-UPDATE user=craig.m question="What town were you born in?" answer=Halifax email=craig@mcbridescaffolding.co.uk
+2024-10-28 15:18:43Z [BOOKING] user=craig.m ref=AH-40463 sku=ACC-SC8 days=3 subtotal=420.00 discount=15% total=357.00 card=4485275742307710 exp=11/25 cvc=118
+2024-10-28 16:52:08Z [YARD] EXPORT user=k.osei sku=EXC-018 bundle=EXC-018-loler-oct

@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /my/
+Disallow: /yard/
+Disallow: /admin/
+Disallow: /staging/
+Disallow: /estimate/resume

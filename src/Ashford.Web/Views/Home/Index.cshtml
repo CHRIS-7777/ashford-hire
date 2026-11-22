@@ -1,0 +1,79 @@
+@model HomeVm
+@{
+    ViewData["Title"] = "Plant, tool & access hire";
+}
+<section class="hero">
+    <div class="wrap hero-grid">
+        <div>
+            <span class="eyebrow">Since 1994 &middot; 8 depots &middot; 1,400+ machines</span>
+            <h1>The kit your site needs,<br>delivered tomorrow.</h1>
+            <p class="lead">Excavators, access platforms, power and compaction equipment from Yorkshire's independent hire specialist. Trade accounts get 15% off every hire.</p>
+            <form class="hero-check" method="get" action="/availability">
+                <label for="pc" class="sr-only">Site postcode</label>
+                <input id="pc" name="postcode" placeholder="Enter your site postcode, e.g. LS10 1RW" autocomplete="postal-code">
+                <button class="btn btn-primary" type="submit">Check delivery</button>
+            </form>
+        </div>
+        <div class="hero-card">
+            <h3>Why sites choose Ashford</h3>
+            <ul class="ticks">
+                <li>Next-day delivery from local depots</li>
+                <li>LOLER-certified, serviced fleet</li>
+                <li>Operator guides with every machine</li>
+                <li>Live hire tracking in the Ashford Site app</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="wrap section">
+    <div class="section-head">
+        <h2>Hire by category</h2>
+        <a href="/equipment">View the full fleet &rarr;</a>
+    </div>
+    <div class="grid grid-3">
+        @foreach (var c in Model.Categories)
+        {
+            <a class="cat-card" href="/equipment?category=@Uri.EscapeDataString(c.Category)">
+                @Html.Raw(Icons.For(c.Category, 56))
+                <div>
+                    <strong>@c.Category</strong>
+                    <div class="muted small">@c.Items machines &middot; from &pound;@c.FromRate.ToString("0")/day</div>
+                </div>
+            </a>
+        }
+    </div>
+</section>
+
+<section class="wrap section">
+    <div class="section-head">
+        <h2>Popular this month</h2>
+    </div>
+    <div class="grid grid-3">
+        @foreach (var e in Model.Featured)
+        {
+            <article class="equip-card">
+                <div class="equip-art">@Html.Raw(Icons.For(e.Category))</div>
+                <div class="equip-body">
+                    <span class="muted small">@e.Category</span>
+                    <h3><a href="/equipment/@e.Slug">@e.Name</a></h3>
+                    <p class="muted small">@e.Summary</p>
+                    <div class="price-row">
+                        <span><strong>&pound;@e.DayRate.ToString("0.00")</strong> /day</span>
+                        <span class="muted small">&pound;@e.WeekRate.ToString("0.00") /week</span>
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+</section>
+
+<section class="wrap section">
+    <div class="band">
+        <div>
+            <h2>Open a trade account</h2>
+            <p>Credit terms, 15% off list rates and a dedicated depot contact. Approval usually within one working day.</p>
+        </div>
+        <a class="btn btn-primary btn-lg" href="/register">Apply now</a>
+    </div>
+</section>

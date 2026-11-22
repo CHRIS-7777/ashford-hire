@@ -1,0 +1,36 @@
+@model AvailabilityVm
+@{
+    ViewData["Title"] = "Delivery check";
+}
+<section class="wrap narrow section">
+    <h1>Can we deliver to your site?</h1>
+    <p class="muted">We deliver next-day from eight depots across Yorkshire and Greater Manchester. Enter the postcode of the site you're hiring for.</p>
+
+    <form class="card form-inline" method="get" action="/availability">
+        <label for="postcode">Site postcode</label>
+        <input id="postcode" name="postcode" value="@Model.Query" placeholder="e.g. LS10 1RW">
+        <button class="btn btn-primary" type="submit">Check</button>
+    </form>
+
+    @if (Model.Checked)
+    {
+        @if (Model.Covered)
+        {
+            <div class="alert alert-success">
+                <strong>Good news.</strong> We deliver to <strong>@Model.Display</strong> from our <strong>@Model.Depot</strong> depot. Order before 3pm for next-day delivery.
+            </div>
+            <p><a class="btn btn-primary" href="/equipment">Browse equipment</a></p>
+        }
+        else
+        {
+            <div class="alert alert-warn">
+                Sorry, we don't currently deliver to <strong>@Html.Raw(Model.Display)</strong>. You can still collect from any depot, or call <strong>0113 496 0770</strong> to ask about out-of-area delivery.
+            </div>
+            <p><a class="btn btn-ghost" href="/depots">Find a depot</a></p>
+        }
+    }
+
+    <div class="card muted small">
+        <strong>Areas we cover:</strong> Leeds (LS), Bradford (BD, HX), Harrogate (HG), York (YO), Wakefield (WF, HD), Sheffield (S), Doncaster (DN) and Greater Manchester (M, OL).
+    </div>
+</section>

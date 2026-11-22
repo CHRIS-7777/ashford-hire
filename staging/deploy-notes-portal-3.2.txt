@@ -1,0 +1,24 @@
+Customer portal 3.2 - deployment notes (ops)
+=============================================
+
+Release window: Sun 06:00-08:00. Rollback: redeploy image ashford-hire-portal:3.1.4.
+
+1. Staging DB restored from the prod snapshot of 14/09 for UAT. The users export for
+   the UAT team is in this folder - delete after sign-off. (still here? -> OPS-398)
+
+2. Telematics (TrakNet) sync no longer runs from the public site. The sync config is
+   now served to the portal itself on loopback only:
+       http://127.0.0.1:8080/internal/telematics/config
+   Anything outside the container gets a 404 by design.
+
+3. Health endpoint for the load balancer: /healthz
+   On-call can add ?verbose=true to see the full runtime config while we chase the
+   intermittent DB timeouts. TODO: remove verbose mode before go-live.
+
+4. Depot kiosks still mint their own unsigned API tokens until the kiosk firmware
+   update lands (KSK-77). The API accepts them for now.
+
+5. Webhook test button (Integrations page) now blocks localhost so customers can't
+   point it at us. Good enough for launch - proper allow-list in 3.3.
+
+6. QA dispatcher account (dispatch.qa) left enabled for the smoke tests.

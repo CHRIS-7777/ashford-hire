@@ -1,0 +1,24 @@
+@{
+    var me = ViewData["Me"] as User;
+    var path = Context.Request.Path.Value ?? "";
+    string A(string p, bool exact = false) => (exact ? path == p : path.StartsWith(p)) ? "active" : "";
+}
+<aside class="side">
+    <div class="side-user">
+        <div class="avatar">@(me?.FirstName?.Substring(0, 1).ToUpperInvariant())</div>
+        <div>
+            <strong>@me?.FullName</strong>
+            <div class="muted small">@me?.Company</div>
+            <span class="badge @(me?.AccountType == "trade" ? "badge-amber" : "")">@(me?.AccountType == "trade" ? "Trade account" : "Retail account")</span>
+        </div>
+    </div>
+    <nav class="side-nav">
+        <a class="@A("/my", true)" href="/my">Overview</a>
+        <a class="@A("/my/hires")" href="/my/hires">Hires</a>
+        <a class="@A("/my/quotes")" href="/my/quotes">Saved quotes</a>
+        <a class="@A("/my/profile")" href="/my/profile">Profile</a>
+        <a class="@A("/my/integrations")" href="/my/integrations">Integrations</a>
+        <a class="@A("/my/security")" href="/my/security">Security</a>
+        <a class="@A("/my/settings")" href="/my/settings">Preferences</a>
+    </nav>
+</aside>

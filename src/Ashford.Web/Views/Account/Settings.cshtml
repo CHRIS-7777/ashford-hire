@@ -1,0 +1,35 @@
+@{
+    ViewData["Title"] = "Preferences";
+    var me = ViewData["Me"] as User;
+}
+<section class="wrap section account">
+    <partial name="_AccountNav" />
+    <div class="account-main">
+        <h1>Preferences</h1>
+        @if (ViewBag.Saved == true)
+        {
+            <div class="alert alert-success">Your preferences have been saved.</div>
+        }
+        <div class="card">
+            <form method="post" asp-antiforgery="true" action="/my/settings" class="form-stack">
+                <label class="check">
+                    <input type="checkbox" name="marketingOptIn" value="true" checked="@me.MarketingOptIn">
+                    <span>Email me offers and seasonal hire deals</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="shareWithPartners" value="true" checked="@me.ShareWithPartners">
+                    <span>Share my hire history with Ashford's insurance and finance partners</span>
+                </label>
+                <div><button class="btn btn-primary" type="submit">Save preferences</button></div>
+            </form>
+        </div>
+
+        <div class="card danger-zone">
+            <h3>Close account</h3>
+            <p class="muted">Closing your account cancels portal access immediately. Open hires stay active and will be invoiced as normal.</p>
+            <form method="post" asp-antiforgery="true" action="/my/settings/close">
+                <button class="btn btn-danger" type="submit">Close my account</button>
+            </form>
+        </div>
+    </div>
+</section>

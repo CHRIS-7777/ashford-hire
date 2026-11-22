@@ -1,0 +1,9 @@
+id,username,email,role,account_type,password_sha1,created
+1,admin,sarah.whitlock@ashfordhire.co.uk,admin,trade,2699601c33cfe00d8072da62d6249acfe572bab7,2021-01-11
+2,dispatch.qa,qa.dispatch@ashfordhire.co.uk,dispatcher,retail,99177e0c95a862386a2228824cf1020bfb5ecaac,2023-08-02
+3,k.osei,kwame.osei@ashfordhire.co.uk,dispatcher,retail,f990fa5b43b7460eb4c5d4f24ff87ee694484306,2022-03-19
+5,megan.p,megan@priceandsons.co.uk,customer,trade,013e8975490bff350a5625ad27ca2fcb611adeed,2022-12-05
+6,tariq,tariq@northerngroundworks.co.uk,customer,trade,579b09b4e301b6da029eb00f084cd13d75e2a0f9,2023-04-27
+7,lucy.b,lucy.barker@outlook.example,customer,retail,08b314f0e1e2c41ec92c3735910658e5a82c6ba7,2024-06-30
+8,dev.patel,dev@patelconstruction.co.uk,customer,trade,b3b45f738e6b6db336fadfa9162024742d04664d,2023-11-14
+9,hannah.w,hannah.wright@gmail.example,customer,retail,993c7afed352ea3540de9665f479670815276bfb,2024-08-03

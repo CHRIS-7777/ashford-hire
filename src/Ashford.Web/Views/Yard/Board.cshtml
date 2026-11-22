@@ -1,0 +1,38 @@
+@model List<Hire>
+@{
+    ViewData["Title"] = "Dispatch board";
+    var today = DateTime.UtcNow.Date;
+}
+<partial name="_StaffNav" />
+<section class="wrap section">
+    <div class="section-head">
+        <div>
+            <h1>Dispatch board</h1>
+            <p class="muted">Deliveries and collections from @today.AddDays(-3).ToString("dd MMM") onwards. Read the driver notes before loading.</p>
+        </div>
+        <div class="legend">
+            <span class="status status-confirmed">Confirmed</span>
+            <span class="status status-on-hire">On hire</span>
+            <span class="status status-completed">Completed</span>
+        </div>
+    </div>
+    <div class="card">
+        <table class="table board">
+            <thead><tr><th>Date</th><th>Ref</th><th>Customer</th><th>Equipment</th><th>Site</th><th>Driver notes</th><th>Status</th></tr></thead>
+            <tbody>
+            @foreach (var h in Model)
+            {
+                <tr class="@(h.StartDate.Date == today ? "today" : "")">
+                    <td>@h.StartDate.ToString("ddd dd MMM")</td>
+                    <td>@h.Ref</td>
+                    <td>@h.FullName<div class="muted small">@h.Company @h.Phone</div></td>
+                    <td>@h.EquipmentName<div class="muted small">@h.Sku</div></td>
+                    <td>@h.DeliveryPostcode</td>
+                    <td class="notes">@Html.Raw(h.SiteNotes)</td>
+                    <td><span class="status status-@h.Status.Replace(" ", "-").ToLowerInvariant()">@h.Status</span></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</section>

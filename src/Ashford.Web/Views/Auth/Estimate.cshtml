@@ -1,0 +1,53 @@
+@{
+    ViewData["Title"] = "Your estimate";
+    var lines = ViewBag.Lines as List<(Equipment Item, int Days)> ?? new();
+    var total = lines.Sum(l => l.Item.PriceFor(l.Days));
+    var expired = Context.Request.Query["expired"] == "1";
+}
+<section class="wrap section narrow">
+    <h1>Your estimate</h1>
+    <p class="muted">Build a list of everything your job needs and we'll price it up. Estimates are kept for 8 hours.</p>
+
+    @if (expired)
+    {
+        <div class="alert alert-warn">That shared estimate has expired. Start a new one below.</div>
+    }
+
+    @if (lines.Count == 0)
+    {
+        <div class="card muted">Your estimate is empty. <a href="/equipment">Browse equipment</a> and choose <em>Add to estimate</em>.</div>
+    }
+    else
+    {
+        <table class="table">
+            <thead><tr><th>Equipment</th><th>Days</th><th class="num">Price</th></tr></thead>
+            <tbody>
+            @foreach (var l in lines)
+            {
+                <tr>
+                    <td><a href="/equipment/@l.Item.Slug">@l.Item.Name</a><div class="muted small">@l.Item.Sku</div></td>
+                    <td>@l.Days</td>
+                    <td class="num">&pound;@l.Item.PriceFor(l.Days).ToString("0.00")</td>
+                </tr>
+            }
+            </tbody>
+            <tfoot><tr><th colspan="2">Estimated hire charge (ex. VAT)</th><th class="num">&pound;@total.ToString("0.00")</th></tr></tfoot>
+        </table>
+
+        <div class="card">
+            <h3>Share this estimate</h3>
+            <p class="muted small">Send this link to a colleague or open it on another device. Anyone with the link continues with the same estimate.</p>
+            <div class="copy-row">
+                <input readonly value="@ViewBag.ShareLink" data-copy-source>
+                <button class="btn btn-ghost" type="button" data-copy>Copy link</button>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a class="btn btn-primary" href="/signin?returnUrl=%2Fequipment">Sign in to book</a>
+            <form method="post" asp-antiforgery="true" action="/estimate/clear" class="inline">
+                <button class="btn btn-ghost" type="submit">Clear estimate</button>
+            </form>
+        </div>
+    }
+</section>

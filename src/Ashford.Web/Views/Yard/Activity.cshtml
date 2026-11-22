@@ -1,0 +1,12 @@
+@model List<string>
+@{
+    ViewData["Title"] = "Activity";
+}
+<partial name="_StaffNav" />
+<section class="wrap section">
+    <h1>Portal activity</h1>
+    <p class="muted">Latest 250 events from the customer portal, newest first. Use this to help customers who call the hire desk about sign-in or booking problems.</p>
+    <div class="card">
+        <pre class="log">@string.Join("\n", Model)</pre>
+    </div>
+</section>

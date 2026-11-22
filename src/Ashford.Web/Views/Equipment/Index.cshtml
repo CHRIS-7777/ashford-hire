@@ -1,0 +1,50 @@
+@model CatalogueVm
+@{
+    ViewData["Title"] = string.IsNullOrEmpty(Model.Category) ? "Equipment" : Model.Category;
+}
+<section class="wrap section">
+    <div class="section-head">
+        <div>
+            <h1>@(string.IsNullOrEmpty(Model.Category) ? "All equipment" : Model.Category)</h1>
+            <p class="muted">@Model.Items.Count machines available for next-day delivery.</p>
+        </div>
+        <form method="get" action="/equipment" class="filters">
+            <select name="category" aria-label="Category">
+                <option value="">All categories</option>
+                @foreach (var c in Model.Categories)
+                {
+                    <option value="@c" selected="@(c == Model.Category)">@c</option>
+                }
+            </select>
+            <select name="sort" aria-label="Sort">
+                <option value="">Recommended</option>
+                <option value="price_asc" selected="@(Model.Sort == "price_asc")">Day rate: low to high</option>
+                <option value="price_desc" selected="@(Model.Sort == "price_desc")">Day rate: high to low</option>
+                <option value="name" selected="@(Model.Sort == "name")">Name</option>
+            </select>
+            <button class="btn btn-ghost" type="submit">Apply</button>
+        </form>
+    </div>
+
+    @if (Model.Items.Count == 0)
+    {
+        <div class="card muted">No equipment matches that category.</div>
+    }
+    <div class="grid grid-3">
+        @foreach (var e in Model.Items)
+        {
+            <article class="equip-card">
+                <div class="equip-art">@Html.Raw(Icons.For(e.Category))</div>
+                <div class="equip-body">
+                    <span class="muted small">@e.Category &middot; @e.Sku</span>
+                    <h3><a href="/equipment/@e.Slug">@e.Name</a></h3>
+                    <p class="muted small">@e.Summary</p>
+                    <div class="price-row">
+                        <span><strong>&pound;@e.DayRate.ToString("0.00")</strong> /day</span>
+                        <a class="btn btn-small btn-ghost" href="/equipment/@e.Slug">Details</a>
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+</section>

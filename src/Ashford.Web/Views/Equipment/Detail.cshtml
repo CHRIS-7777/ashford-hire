@@ -1,0 +1,134 @@
+@model EquipmentDetailVm
+@{
+    var e = Model.Item;
+    var me = ViewData["Me"] as User;
+    ViewData["Title"] = e.Name;
+}
+<section class="wrap section">
+    <nav class="crumbs"><a href="/equipment">Equipment</a> / <a href="/equipment?category=@Uri.EscapeDataString(e.Category)">@e.Category</a> / <span>@e.Name</span></nav>
+    <div class="detail-grid">
+        <div>
+            <div class="detail-art">@Html.Raw(Icons.For(e.Category, 160))</div>
+            <h1>@e.Name</h1>
+            <p class="lead">@e.Summary</p>
+            <p>@e.Description</p>
+            <h3>Specification</h3>
+            <table class="table spec">
+                <tbody>
+                @foreach (var s in e.SpecList)
+                {
+                    <tr><th>@s.Key</th><td>@s.Value</td></tr>
+                }
+                <tr><th>Fleet reference</th><td>@e.Sku</td></tr>
+                </tbody>
+            </table>
+            <p>
+                <a class="btn btn-ghost" href="/equipment/manuals/download?file=@Uri.EscapeDataString(e.ManualFile)">Download operator guide (PDF)</a>
+            </p>
+        </div>
+
+        <div>
+            <div class="card price-card"
+                 data-booking
+                 data-day-rate="@e.DayRate.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                 data-week-rate="@e.WeekRate.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                <div class="price-big">&pound;@e.DayRate.ToString("0.00") <span>/day</span></div>
+                <div class="muted">&pound;@e.WeekRate.ToString("0.00") per week &middot; &pound;@e.Deposit.ToString("0") refundable deposit</div>
+                <hr>
+
+                @if (Model.Errors.Count > 0)
+                {
+                    <div class="alert alert-error">
+                        <ul>
+                            @foreach (var err in Model.Errors)
+                            {
+                                <li>@err</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                @if (me == null)
+                {
+                    <p class="muted">Sign in to book online, or add this machine to an estimate.</p>
+                    <form method="post" asp-antiforgery="true" action="/estimate/add" class="form-inline">
+                        <input type="hidden" name="slug" value="@e.Slug">
+                        <label for="est-days">Days</label>
+                        <input id="est-days" name="days" type="number" min="1" max="60" value="3" class="input-small">
+                        <button class="btn btn-ghost" type="submit">Add to estimate</button>
+                    </form>
+                    <p><a class="btn btn-primary btn-block" href="/signin?returnUrl=@Uri.EscapeDataString("/equipment/" + e.Slug)">Sign in to book</a></p>
+                }
+                else
+                {
+                    <form method="post" asp-antiforgery="true" action="/equipment/@e.Slug/book" class="form-stack" autocomplete="off">
+                        <div class="form-row">
+                            <div class="field">
+                                <label for="StartDate">Hire start</label>
+                                <input id="StartDate" name="StartDate" type="date" value="@Model.Form.StartDate" required data-start>
+                            </div>
+                            <div class="field">
+                                <label for="Days">Days</label>
+                                <input id="Days" name="Days" type="number" min="1" max="60" value="@Model.Form.Days" required data-days>
+                            </div>
+                        </div>
+                        <div class="muted small" data-off-hire></div>
+                        <div class="field">
+                            <label for="DeliveryPostcode">Delivery site postcode</label>
+                            <input id="DeliveryPostcode" name="DeliveryPostcode" value="@Model.Form.DeliveryPostcode" required>
+                        </div>
+                        <div class="field">
+                            <label for="SiteNotes">Site access notes for the driver</label>
+                            <textarea id="SiteNotes" name="SiteNotes" rows="3" placeholder="Gate code, contact on site, where to drop the machine...">@Model.Form.SiteNotes</textarea>
+                        </div>
+                        <div class="field">
+                            <label for="CardNumber">Card number</label>
+                            <input id="CardNumber" name="CardNumber" inputmode="numeric" placeholder="4242 4242 4242 4242" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="field">
+                                <label for="CardExpiry">Expiry (MM/YY)</label>
+                                <input id="CardExpiry" name="CardExpiry" placeholder="12/27" required>
+                            </div>
+                            <div class="field">
+                                <label for="CardCvc">CVC</label>
+                                <input id="CardCvc" name="CardCvc" inputmode="numeric" placeholder="123" required>
+                            </div>
+                        </div>
+                        <div class="estimate-box">
+                            <div><span>Hire charge</span><strong data-subtotal>&ndash;</strong></div>
+                            <div data-discount-row hidden><span data-discount-label>Account discount</span><strong data-discount>&ndash;</strong></div>
+                            <div class="total"><span>Total today</span><strong data-total>&ndash;</strong></div>
+                        </div>
+                        <button class="btn btn-primary btn-block" type="submit">Confirm booking</button>
+                    </form>
+                    <form method="post" asp-antiforgery="true" action="/equipment/@e.Slug/quote" class="quote-form" data-quote-form>
+                        <input type="hidden" name="days" value="@Model.Form.Days" data-quote-days>
+                        <input type="hidden" name="startDate" value="@Model.Form.StartDate" data-quote-start>
+                        <button class="btn btn-ghost btn-block" type="submit">Save as quote</button>
+                    </form>
+                }
+            </div>
+            <div class="card muted small">
+                <strong>Included:</strong> delivery and collection within 25 miles of the depot, damage waiver at 12% of the hire charge, 24/7 breakdown cover.
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Related.Count > 0)
+    {
+        <h2>You might also need</h2>
+        <div class="grid grid-3">
+            @foreach (var r in Model.Related)
+            {
+                <article class="equip-card">
+                    <div class="equip-art">@Html.Raw(Icons.For(r.Category))</div>
+                    <div class="equip-body">
+                        <h3><a href="/equipment/@r.Slug">@r.Name</a></h3>
+                        <div class="price-row"><span><strong>&pound;@r.DayRate.ToString("0.00")</strong> /day</span></div>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>

@@ -1,0 +1,77 @@
+@{
+    ViewData["Title"] = "Security";
+    var me = ViewData["Me"] as User;
+    var questions = ViewBag.Questions as string[];
+    string saved = ViewBag.Saved;
+}
+<section class="wrap section account">
+    <partial name="_AccountNav" />
+    <div class="account-main">
+        <h1>Security</h1>
+        @if (saved == "recovery")
+        {
+            <div class="alert alert-success">Your account recovery details have been updated.</div>
+        }
+        @if (saved == "password")
+        {
+            <div class="alert alert-success">Your password has been changed.</div>
+        }
+
+        <div class="card">
+            <h3>Account recovery</h3>
+            <p class="muted small">If you forget your password we'll ask you this question before letting you choose a new one.</p>
+            <form method="post" asp-antiforgery="true" action="/my/security/recovery" class="form-stack">
+                <div class="field">
+                    <label for="securityQuestion">Security question</label>
+                    <select id="securityQuestion" name="securityQuestion">
+                        @foreach (var q in questions)
+                        {
+                            if (q == me.SecurityQuestion)
+                            {
+                                <option selected>@q</option>
+                            }
+                            else
+                            {
+                                <option>@q</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="securityAnswer">New answer</label>
+                    <input id="securityAnswer" name="securityAnswer" autocomplete="off" placeholder="Leave blank to keep your current answer">
+                </div>
+                <div class="field">
+                    <label for="recoveryEmail">Recovery email</label>
+                    <input id="recoveryEmail" name="recoveryEmail" type="email" value="@me.RecoveryEmail">
+                </div>
+                <div><button class="btn btn-primary" type="submit">Update recovery details</button></div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Change password</h3>
+            @if (ViewBag.PasswordError != null)
+            {
+                <div class="alert alert-error">@ViewBag.PasswordError</div>
+            }
+            <form method="post" asp-antiforgery="true" action="/my/security/password" class="form-stack">
+                <div class="field">
+                    <label for="currentPassword">Current password</label>
+                    <input id="currentPassword" name="currentPassword" type="password" required>
+                </div>
+                <div class="form-row">
+                    <div class="field">
+                        <label for="newPassword">New password</label>
+                        <input id="newPassword" name="newPassword" type="password" required>
+                    </div>
+                    <div class="field">
+                        <label for="confirmPassword">Confirm new password</label>
+                        <input id="confirmPassword" name="confirmPassword" type="password" required>
+                    </div>
+                </div>
+                <div><button class="btn btn-primary" type="submit">Change password</button></div>
+            </form>
+        </div>
+    </div>
+</section>

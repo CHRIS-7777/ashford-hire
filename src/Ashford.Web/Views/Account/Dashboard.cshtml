@@ -1,0 +1,50 @@
+@{
+    ViewData["Title"] = "My account";
+    var me = ViewData["Me"] as User;
+    var hires = ViewBag.Hires as List<Hire> ?? new();
+    var pricing = ViewBag.Pricing as PricingProfile;
+    var onHire = hires.Count(h => h.Status == "On hire");
+    var upcoming = hires.Count(h => h.Status == "Confirmed");
+}
+<section class="wrap section account">
+    <partial name="_AccountNav" />
+    <div class="account-main">
+        <h1>Hello, @me.FirstName</h1>
+        <div class="grid grid-3 kpis">
+            <div class="card kpi"><div class="kpi-value">@onHire</div><div class="muted">on hire now</div></div>
+            <div class="card kpi"><div class="kpi-value">@upcoming</div><div class="muted">upcoming deliveries</div></div>
+            <div class="card kpi"><div class="kpi-value">@ViewBag.QuoteCount</div><div class="muted">saved quotes</div></div>
+        </div>
+
+        @if (pricing != null && pricing.Discount > 0)
+        {
+            <div class="alert alert-info">Your <strong>@pricing.Tier</strong> pricing gives you <strong>@pricing.Discount.ToString("0.##")% off</strong> list rates on every hire.</div>
+        }
+
+        <div class="card">
+            <div class="section-head"><h3>Recent hires</h3><a href="/my/hires">All hires &rarr;</a></div>
+            @if (hires.Count == 0)
+            {
+                <p class="muted">No hires yet. <a href="/equipment">Browse equipment</a>.</p>
+            }
+            else
+            {
+                <table class="table">
+                    <thead><tr><th>Ref</th><th>Equipment</th><th>Start</th><th>Status</th><th class="num">Total</th></tr></thead>
+                    <tbody>
+                    @foreach (var h in hires.Take(5))
+                    {
+                        <tr>
+                            <td><a href="/my/hires/@h.Id">@h.Ref</a></td>
+                            <td>@h.EquipmentName</td>
+                            <td>@h.StartDate.ToString("dd MMM yyyy")</td>
+                            <td><span class="status status-@h.Status.Replace(" ", "-").ToLowerInvariant()">@h.Status</span></td>
+                            <td class="num">&pound;@h.Total.ToString("0.00")</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</section>

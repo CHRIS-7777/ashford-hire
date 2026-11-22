@@ -1,0 +1,43 @@
+@model List<User>
+@{
+    ViewData["Title"] = "Users";
+}
+<partial name="_StaffNav" />
+<section class="wrap section">
+    <h1>Users</h1>
+    <p class="muted">Portal accounts for customers and depot staff. Trade accounts receive 15% off list rates.</p>
+    <div class="card">
+        <table class="table">
+            <thead><tr><th>#</th><th>User</th><th>Company</th><th>Created</th><th>Role</th><th>Account</th><th>Active</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var u in Model)
+            {
+                <tr>
+                    <td>@u.Id</td>
+                    <td><strong>@u.Username</strong><div class="muted small">@u.FullName &middot; @u.Email</div></td>
+                    <td>@u.Company</td>
+                    <td>@u.CreatedAt.ToString("dd MMM yyyy")</td>
+                    <td colspan="4">
+                        <form method="post" asp-antiforgery="true" action="/admin/users/@u.Id" class="row-form">
+                            <select name="role">
+                                @foreach (var r in new[] { "customer", "dispatcher", "admin" })
+                                {
+                                    if (r == u.Role) { <option selected>@r</option> } else { <option>@r</option> }
+                                }
+                            </select>
+                            <select name="accountType">
+                                @foreach (var t in new[] { "retail", "trade" })
+                                {
+                                    if (t == u.AccountType) { <option selected>@t</option> } else { <option>@t</option> }
+                                }
+                            </select>
+                            <label class="check"><input type="checkbox" name="isActive" value="true" checked="@u.IsActive"> active</label>
+                            <button class="btn btn-small btn-ghost" type="submit">Save</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</section>

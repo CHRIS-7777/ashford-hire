@@ -1,0 +1,19 @@
+@{
+    var me = ViewData["Me"] as User;
+    var path = Context.Request.Path.Value ?? "";
+    string A(string p, bool exact = false) => (exact ? path == p : path.StartsWith(p)) ? "active" : "";
+}
+<div class="staff-bar">
+    <div class="wrap staff-bar-inner">
+        <span class="staff-tag">@(me?.IsAdmin == true ? "Head office" : "Yard")</span>
+        <a class="@A("/yard", true)" href="/yard">Dispatch board</a>
+        <a class="@A("/yard/service")" href="/yard/service">Service records</a>
+        <a class="@A("/yard/activity")" href="/yard/activity">Activity</a>
+        @if (me?.IsAdmin == true)
+        {
+            <a class="@A("/admin", true)" href="/admin">Dashboard</a>
+            <a class="@A("/admin/users")" href="/admin/users">Users</a>
+        }
+        <span class="staff-who muted">Signed in as @me?.Username</span>
+    </div>
+</div>

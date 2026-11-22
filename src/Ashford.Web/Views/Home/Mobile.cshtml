@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Ashford Site app";
+}
+<section class="wrap section">
+    <div class="split">
+        <div>
+            <span class="eyebrow">For site managers and buyers</span>
+            <h1>The Ashford Site app</h1>
+            <p class="lead">Track deliveries, extend hires and call off equipment from the site cabin. Available for iOS and Android.</p>
+            <ul class="ticks">
+                <li>Live delivery ETA from our telematics-equipped fleet</li>
+                <li>Off-hire with one tap and get a collection number</li>
+                <li>Hire agreements and operator guides offline</li>
+                <li>Tap <strong>Open in browser</strong> to continue in the customer portal without signing in again</li>
+            </ul>
+            <p>
+                <a class="btn btn-primary" href="#">App Store</a>
+                <a class="btn btn-ghost" href="#">Google Play</a>
+            </p>
+        </div>
+        <div class="card">
+            <h3>Building your own integration?</h3>
+            <p class="muted">The app talks to the same customer API you can use from your own purchasing or site-management systems.</p>
+            <ul class="plain">
+                <li>Base URL: <code>/api/v2</code></li>
+                <li>Authentication: Bearer token from <code>POST /api/v2/auth/token</code></li>
+                <li>Format: JSON</li>
+                <li>Webhooks for hire events: configure under <em>My account &rarr; Integrations</em></li>
+            </ul>
+            <p class="muted small">API access is included with every customer account. Tokens are valid for one hour.</p>
+        </div>
+    </div>
+</section>

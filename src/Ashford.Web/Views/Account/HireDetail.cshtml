@@ -1,0 +1,44 @@
+@model Hire
+@{
+    ViewData["Title"] = "Hire " + Model.Ref;
+}
+<section class="wrap section account">
+    <partial name="_AccountNav" />
+    <div class="account-main">
+        @if (ViewBag.Booked == true)
+        {
+            <div class="alert alert-success"><strong>Booking confirmed.</strong> Your reference is @Model.Ref. We'll text the driver's ETA on the morning of delivery.</div>
+        }
+        <div class="section-head">
+            <h1>Hire @Model.Ref</h1>
+            <a class="btn btn-ghost" href="/my/hires/@Model.Id/agreement">View hire agreement</a>
+        </div>
+        <div class="grid grid-2">
+            <div class="card">
+                <h3>@Model.EquipmentName</h3>
+                <dl class="dl">
+                    <dt>Fleet ref</dt><dd>@Model.Sku</dd>
+                    <dt>On hire</dt><dd>@Model.StartDate.ToString("dddd d MMMM yyyy")</dd>
+                    <dt>Off hire</dt><dd>@Model.EndDate.ToString("dddd d MMMM yyyy") (@Model.Days days)</dd>
+                    <dt>Status</dt><dd><span class="status status-@Model.Status.Replace(" ", "-").ToLowerInvariant()">@Model.Status</span></dd>
+                </dl>
+            </div>
+            <div class="card">
+                <h3>Charges</h3>
+                <dl class="dl">
+                    <dt>Hire charge</dt><dd>&pound;@Model.Subtotal.ToString("0.00")</dd>
+                    <dt>Account discount</dt><dd>@Model.DiscountPct.ToString("0.##")%</dd>
+                    <dt>Total paid</dt><dd><strong>&pound;@Model.Total.ToString("0.00")</strong></dd>
+                    <dt>Card</dt><dd>&bull;&bull;&bull;&bull; @Model.CardLast4</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Delivery</h3>
+            <dl class="dl">
+                <dt>Site postcode</dt><dd>@Model.DeliveryPostcode</dd>
+                <dt>Driver notes</dt><dd class="notes">@Html.Raw(Model.SiteNotes)</dd>
+            </dl>
+        </div>
+    </div>
+</section>

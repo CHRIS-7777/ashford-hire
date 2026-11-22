@@ -1,0 +1,21 @@
+{
+  "Logging": {
+    "LogLevel": { "Default": "Information", "Microsoft.AspNetCore": "Warning" }
+  },
+  "ConnectionStrings": {
+    "App": "Server=stg-sql01.ashford.local,1433;Database=AshfordHire_UAT;User Id=ashford_app;Password=AshApp_Stg_2023;Encrypt=False",
+    "ReadOnly": "Server=stg-sql01.ashford.local,1433;Database=AshfordHire_UAT;User Id=ashford_ro;Password=AshRo_Stg_2023;Encrypt=False"
+  },
+  "Jwt": {
+    "Issuer": "ashfordhire-api",
+    "SigningKey": "staging-ashford-jwt-2023-do-not-use-in-prod",
+    "AllowUnsignedKioskTokens": true
+  },
+  "Telematics": {
+    "ApiBase": "https://sandbox.traknet.example/v3",
+    "ApiKey": "tnk_test_0b6c1d2e3f40",
+    "SyncEndpoint": "/internal/telematics/config"
+  },
+  "Health": { "VerboseQueryParameter": "verbose" },
+  "Smtp": { "Host": "mail.ashfordhire.co.uk", "User": "portal@ashfordhire.co.uk", "Password": "Relay-2023-Autumn!" }
+}

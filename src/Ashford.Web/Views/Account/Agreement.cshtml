@@ -1,0 +1,56 @@
+@model Hire
+@{
+    ViewData["Title"] = "Hire agreement " + Model.Ref;
+}
+<section class="wrap section narrow">
+    <div class="agreement card">
+        <div class="agreement-head">
+            <div>
+                <div class="brand"><span>Ashford<b>Hire</b></span></div>
+                <div class="muted small">Ashford Tool &amp; Plant Hire Ltd &middot; Unit 4, Stourton Link, Leeds LS10 1RW &middot; VAT GB 291 4471 06</div>
+            </div>
+            <div class="agreement-ref">
+                <div class="muted small">Hire agreement</div>
+                <strong>@Model.Ref</strong>
+                <div class="muted small">Issued @Model.CreatedAt.ToString("dd/MM/yyyy")</div>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <div>
+                <h4>Hirer</h4>
+                <p>
+                    @Model.FullName<br>
+                    @if (!string.IsNullOrEmpty(Model.Company))
+                    {
+                        <span>@Model.Company</span><br>
+                    }
+                    @Model.Email<br>
+                    @Model.Phone<br>
+                    Account: @Model.Username
+                </p>
+            </div>
+            <div>
+                <h4>Delivery</h4>
+                <p>
+                    Site postcode: @Model.DeliveryPostcode<br>
+                    On hire: @Model.StartDate.ToString("dd/MM/yyyy")<br>
+                    Off hire: @Model.EndDate.ToString("dd/MM/yyyy")<br>
+                    Driver notes: @Model.SiteNotes
+                </p>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead><tr><th>Fleet ref</th><th>Description</th><th>Days</th><th class="num">Charge</th></tr></thead>
+            <tbody>
+                <tr><td>@Model.Sku</td><td>@Model.EquipmentName</td><td>@Model.Days</td><td class="num">&pound;@Model.Subtotal.ToString("0.00")</td></tr>
+                <tr><td></td><td>Account discount (@Model.DiscountPct.ToString("0.##")%)</td><td></td><td class="num">&minus;&pound;@((Model.Subtotal - Model.Total).ToString("0.00"))</td></tr>
+            </tbody>
+            <tfoot><tr><th colspan="3">Total charged to card ending @Model.CardLast4</th><th class="num">&pound;@Model.Total.ToString("0.00")</th></tr></tfoot>
+        </table>
+
+        <p class="muted small">The hirer accepts Ashford's hire terms and conditions (v3). The hirer is responsible for the equipment from delivery until it is collected or returned to the depot. Report breakdowns on 0113 496 0770.</p>
+        <p><button class="btn btn-ghost" type="button" onclick="window.print()">Print</button> <a class="btn btn-ghost" href="/my/hires">Back to hires</a></p>
+    </div>
+</section>

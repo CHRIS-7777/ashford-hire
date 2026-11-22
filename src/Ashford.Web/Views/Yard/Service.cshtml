@@ -1,0 +1,62 @@
+@model ServiceVm
+@{
+    ViewData["Title"] = "Service records";
+}
+<partial name="_StaffNav" />
+<section class="wrap section">
+    <h1>Service records</h1>
+    <p class="muted">Bundle an asset's service and LOLER history for an auditor or a customer's site file. Bundles are kept for 30 days.</p>
+    <div class="grid grid-2">
+        <div class="card">
+            <h3>Export service bundle</h3>
+            @if (Model.Error != null)
+            {
+                <div class="alert alert-error">@Model.Error</div>
+            }
+            <form method="post" asp-antiforgery="true" action="/yard/service/export" class="form-stack">
+                <div class="field">
+                    <label for="sku">Asset</label>
+                    <select id="sku" name="sku">
+                        @foreach (var a in Model.Assets)
+                        {
+                            if (a.Sku == Model.Sku)
+                            {
+                                <option value="@a.Sku" selected>@a.Sku &ndash; @a.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@a.Sku">@a.Sku &ndash; @a.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="bundleName">Bundle name</label>
+                    <input id="bundleName" name="bundleName" value="@Model.BundleName" placeholder="e.g. EXC-018-audit-october">
+                </div>
+                <button class="btn btn-primary" type="submit">Create bundle</button>
+            </form>
+            @if (Model.Output != null)
+            {
+                <h4>Job output</h4>
+                <pre class="terms">@Model.Output</pre>
+            }
+        </div>
+        <div class="card">
+            <h3>Recent bundles</h3>
+            @if (Model.Bundles.Count == 0)
+            {
+                <p class="muted">No bundles yet.</p>
+            }
+            else
+            {
+                <ul class="plain mono small">
+                    @foreach (var b in Model.Bundles)
+                    {
+                        <li>@b</li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</section>
